@@ -41,10 +41,18 @@ Sub main()
     Dim wbDetail As Workbook
     Dim wbReceipt As Workbook
     Dim wbLunch As Workbook
+    Dim tailOfFileName As String
+    Dim dayPayed As Date
+    Dim lastMonthDate As Date
     
     embedTemplate   'ひな形に年月日を入力する
-    arrUserDates() = getUserDates()
-
+    arrUserDates() = getUserDates() '元データを配列へ格納する処理関数
+    
+    '保存ファイル名の末尾生成処理
+    dayPayed = ThisWorkbook.Worksheets("InvoiceData").Range("B1").Value
+    lastMonthDate = DateSerial(Year(dayPayed), Month(dayPayed) - 1, 1)
+    tailOfFileName = "(" & Format(lastMonthDate, "yyyymm") & ").xlsx"
+    
     '画面の再描画/自動計算/イベント受付を停止
     With Application
       .Calculation = xlCalculationManual
@@ -57,7 +65,7 @@ Sub main()
     Set wbDetail = ActiveWorkbook
     
     wbCreateDetails arrUserDates, wbDetail
-    wbDetail.SaveAs ThisWorkbook.Path & "\明細書" & ".xlsx" 'TODO:timestamp
+    wbDetail.SaveAs ThisWorkbook.Path & "\工賃支給明細書" & tailOfFileName
     wbDetail.Close
     
     '受領書作成処理
@@ -65,7 +73,7 @@ Sub main()
     Set wbReceipt = ActiveWorkbook
     
     wbCreateReceipt arrUserDates, wbReceipt
-    wbReceipt.SaveAs ThisWorkbook.Path & "\受領書" & ".xlsx"
+    wbReceipt.SaveAs ThisWorkbook.Path & "\工賃受領書" & tailOfFileName
     wbReceipt.Close
     
     '昼食代請求書兼領収書
@@ -73,7 +81,7 @@ Sub main()
     Set wbLunch = ActiveWorkbook
     
     wbCreateLunch arrUserDates, wbLunch
-    wbLunch.SaveAs ThisWorkbook.Path & "\昼食" & ".xlsx"
+    wbLunch.SaveAs ThisWorkbook.Path & "\昼食代請求書兼領収書" & tailOfFileName
     wbLunch.Close
     
     '画面の再描画/自動計算/イベント受付を再開
