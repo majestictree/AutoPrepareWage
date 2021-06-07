@@ -6,13 +6,16 @@ Enum colUserDate
     Name = 1
     daysWorked
     unit
-    teate
+    allowance
     baseWage
     addWage
     totalHere
     nLunch
     selfPay
-    totalAll
+    deductionPayment
+    none
+    transportationEx
+    allPayment
 End Enum
 
 '値を挿入する位置を定数表記
@@ -24,9 +27,14 @@ Const Adrs_PayJPYear = "F4"
 Const Adrs_LastMonth = "H3"
 Const Adrs_PayMonth = "H4"
 Const Adrs_PayDay = "J4"
+Const Adrs_AddWage = "G10"
+Const Adrs_strTransprtationEx = "D11"
+Const Adrs_TransportationEx = "G11"
 '受領書
 Const Adrs_ReceiptYear = "Z3"
 Const Adrs_WorkDayReceipt = "K20"
+Const Adrs_ReceiptStrTransEx = "A23"
+Const Adrs_ReceiptTransEx = "T23"
 '昼食
 Const Adrs_DateOfIssue = "D1"
 Const Adrs_NumOfLunch = "Q14"
@@ -136,6 +144,11 @@ Sub wbCreateDetails(arrUserDates As Variant, wbDetail As Workbook)
             wsDetail.Name = arrUserDates(i, Name)
             wsDetail.Range(Adrs_WorkDay).Value = arrUserDates(i, daysWorked)
             wsDetail.Range(Adrs_nLunch).Value = arrUserDates(i, nLunch)
+            wsDetail.Range(Adrs_AddWage).Value = arrUserDates(i, addWage)
+            If arrUserDates(i, transportationEx) <> 0 Then
+                wsDetail.Range(Adrs_strTransprtationEx).Value = "交通費"
+                wsDetail.Range(Adrs_TransportationEx).Value = arrUserDates(i, transportationEx)
+            End If
     Next
     
     Application.DisplayAlerts = False ' メッセージを非表示
@@ -144,6 +157,7 @@ Sub wbCreateDetails(arrUserDates As Variant, wbDetail As Workbook)
     Application.DisplayAlerts = True
     
 End Sub
+
 Sub wbCreateReceipt(arrUserDates As Variant, wbReceipt As Workbook)
 
     Dim wsReceipt As Worksheet
@@ -182,13 +196,12 @@ Sub wbCreateLunch(arrUserDates As Variant, wbLunch As Workbook)
     
 End Sub
 
-
 Function getUserDates() As Variant
 
     Dim returnArray As Variant, n As Long
     n = Cells(Rows.Count, 1).End(xlUp).Row - 4
-    ReDim returnArray(n, 11)
-    returnArray = ThisWorkbook.Worksheets("InvoiceData").Range("A5", Cells(Rows.Count, 11).End(xlUp)).Value
+    ReDim returnArray(n, 14)
+    returnArray = ThisWorkbook.Worksheets("InvoiceData").Range("A5", Cells(Rows.Count, 14).End(xlUp)).Value
     getUserDates = returnArray
 End Function
 
