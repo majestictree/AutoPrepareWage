@@ -11,6 +11,7 @@ Enum colUserDate
     addWage
     totalHere
     nLunch
+    feeLunch
     selfPay
     deductionPayment
     none
@@ -144,10 +145,13 @@ Sub wbCreateDetails(arrUserDates As Variant, wbDetail As Workbook)
             wsDetail.Name = arrUserDates(i, Name)
             wsDetail.Range(Adrs_WorkDay).Value = arrUserDates(i, daysWorked)
             wsDetail.Range(Adrs_nLunch).Value = arrUserDates(i, nLunch)
-            wsDetail.Range(Adrs_AddWage).Value = arrUserDates(i, addWage)
-            If arrUserDates(i, transportationEx) <> 0 Then
+            If arrUserDates(i, addWage) <> "" Then
+                wsDetail.Range(Adrs_AddWage).Value = arrUserDates(i, addWage)
+            End If
+            If arrUserDates(i, transportationEx) <> "" Then
                 wsDetail.Range(Adrs_strTransprtationEx).Value = "Œð’Ê”ï"
                 wsDetail.Range(Adrs_TransportationEx).Value = arrUserDates(i, transportationEx)
+                wsDetail.Range("K11").Value = "‰~"
             End If
     Next
     
