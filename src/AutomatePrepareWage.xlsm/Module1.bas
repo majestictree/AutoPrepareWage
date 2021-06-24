@@ -31,9 +31,12 @@ Const Adrs_PayDay = "J4"
 Const Adrs_AddWage = "G10"
 Const Adrs_strTransprtationEx = "D11"
 Const Adrs_TransportationEx = "G11"
+Const Adrs_strSelfPay = "D18"
+Const Adrs_SelfPay = "G18"
 '受領書
 Const Adrs_ReceiptYear = "Z3"
 Const Adrs_WorkDayReceipt = "K20"
+Const Adrs_ReceiptAddWage = "T22"
 Const Adrs_ReceiptStrTransEx = "A23"
 Const Adrs_ReceiptTransEx = "T23"
 '昼食
@@ -153,6 +156,11 @@ Sub wbCreateDetails(arrUserDates As Variant, wbDetail As Workbook)
                 wsDetail.Range(Adrs_TransportationEx).Value = arrUserDates(i, transportationEx)
                 wsDetail.Range("K11").Value = "円"
             End If
+            If arrUserDates(i, selfPay) <> "" Then
+                wsDetail.Range(Adrs_strSelfPay).Value = "利用料"
+                wsDetail.Range(Adrs_SelfPay).Value = arrUserDates(i, selfPay)
+                wsDetail.Range("K18").Value = "円"
+            End If
     Next
     
     Application.DisplayAlerts = False ' メッセージを非表示
@@ -172,6 +180,13 @@ Sub wbCreateReceipt(arrUserDates As Variant, wbReceipt As Workbook)
             Set wsReceipt = ActiveSheet 'コピーしたシートを変数にセット
             wsReceipt.Name = arrUserDates(i, Name)
             wsReceipt.Range(Adrs_WorkDayReceipt).Value = arrUserDates(i, daysWorked)
+            If arrUserDates(i, addWage) <> "" Then
+                wsReceipt.Range(Adrs_ReceiptAddWage).Value = arrUserDates(i, addWage)
+            End If
+            If arrUserDates(i, transportationEx) <> "" Then
+                wsReceipt.Range(Adrs_ReceiptStrTransEx).Value = "交通費"
+                wsReceipt.Range(Adrs_ReceiptTransEx).Value = arrUserDates(i, transportationEx)
+            End If
     Next
     
     Application.DisplayAlerts = False ' メッセージを非表示
