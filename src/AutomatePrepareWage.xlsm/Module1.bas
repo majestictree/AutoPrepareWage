@@ -35,15 +35,16 @@ Const Adrs_strSelfPay = "D18"
 Const Adrs_SelfPay = "G18"
 '受領書
 Const Adrs_ReceiptYear = "Z3"
-Const Adrs_WorkDayReceipt = "K20"
-Const Adrs_ReceiptAddWage = "T22"
-Const Adrs_ReceiptStrTransEx = "A23"
-Const Adrs_ReceiptTransEx = "T23"
+Const Adrs_Monthly = "A20"
+Const Adrs_WorkDayReceipt = "K21"
+Const Adrs_ReceiptAddWage = "T23"
+Const Adrs_ReceiptStrTransEx = "A24"
+Const Adrs_ReceiptTransEx = "T24"
 '昼食
 Const Adrs_DateOfIssue = "D1"
 Const Adrs_NumOfLunch = "Q14"
-Const Adrs_LunchThisJPYear = "B19"
-Const Adrs_LunchLastMonth = "D19"
+Const Adrs_LunchThisJPYear = "D19"
+Const Adrs_LunchLastMonth = "F19"
 Const Adrs_LunchReceiptJPYear = "F23"
 
 Sub main()
@@ -124,7 +125,8 @@ Sub embedTemplate()
     
     '受領書の日付等入力
     With ThisWorkbook.Worksheets("Receipt")
-        .Range(Adrs_ReceiptYear).Value = Year(dayPayed)
+        .Range(Adrs_ReceiptYear).Value = Year(dayPayed) - 2018
+        .Range(Adrs_Monthly).Value = Month(lastMonthDate) & "月分"
     End With
     
     '昼食の日付等入力
@@ -151,11 +153,11 @@ Sub wbCreateDetails(arrUserDates As Variant, wbDetail As Workbook)
             If arrUserDates(i, addWage) <> "" Then
                 wsDetail.Range(Adrs_AddWage).Value = arrUserDates(i, addWage)
             End If
-            If arrUserDates(i, transportationEx) <> "" Then
-                wsDetail.Range(Adrs_strTransprtationEx).Value = "交通費"
-                wsDetail.Range(Adrs_TransportationEx).Value = arrUserDates(i, transportationEx)
-                wsDetail.Range("K11").Value = "円"
-            End If
+'            If arrUserDates(i, transportationEx) <> "" Then
+'                wsDetail.Range(Adrs_strTransprtationEx).Value = "交通費"
+'                wsDetail.Range(Adrs_TransportationEx).Value = arrUserDates(i, transportationEx)
+'                wsDetail.Range("K11").Value = "円"
+'            End If
             If arrUserDates(i, selfPay) <> "" Then
                 wsDetail.Range(Adrs_strSelfPay).Value = "利用料"
                 wsDetail.Range(Adrs_SelfPay).Value = arrUserDates(i, selfPay)
@@ -183,10 +185,10 @@ Sub wbCreateReceipt(arrUserDates As Variant, wbReceipt As Workbook)
             If arrUserDates(i, addWage) <> "" Then
                 wsReceipt.Range(Adrs_ReceiptAddWage).Value = arrUserDates(i, addWage)
             End If
-            If arrUserDates(i, transportationEx) <> "" Then
-                wsReceipt.Range(Adrs_ReceiptStrTransEx).Value = "交通費"
-                wsReceipt.Range(Adrs_ReceiptTransEx).Value = arrUserDates(i, transportationEx)
-            End If
+'            If arrUserDates(i, transportationEx) <> "" Then
+'                wsReceipt.Range(Adrs_ReceiptStrTransEx).Value = "交通費"
+'                wsReceipt.Range(Adrs_ReceiptTransEx).Value = arrUserDates(i, transportationEx)
+'            End If
     Next
     
     Application.DisplayAlerts = False ' メッセージを非表示
